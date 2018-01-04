@@ -1,0 +1,49 @@
+{
+  "name": "noderestmongo",
+  "version": "1.0.0",
+  "description": "Daimler DevCloud Demo to show REST service with mongodb backend",
+  "main": "index.js",
+  "engines": {
+    "node": "8.4"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/webpack",
+    "test": "node_modules/.bin/mocha-webpack --reporter spec --webpack-config webpack.config.js src/test/**/*.test.ts || true"
+  },
+  "author": "Dr. Thomas Voß, iCOMcept GmbH (voss@icomcept.de)",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.0.39",
+    "@types/mongoose": "^4.7.28",
+    "@types/passport": "^0.4.1",
+    "clean-webpack-plugin": "^0.1.17",
+    "copy-webpack-plugin": "^4.2.3",
+    "mocha-webpack": "^1.0.1",
+    "sinon": "^4.1.2",
+    "sinon-express-mock": "^1.3.1",
+    "source-map-loader": "^0.2.3",
+    "ts-loader": "^3.1.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1",
+    "yaml-loader": "^0.5.0"
+  },
+  "dependencies": {
+    "@types/chai": "^4.0.6",
+    "@types/chai-http": "^3.0.3",
+    "@types/mocha": "^2.2.44",
+    "adal-node": "^0.1.25",
+    "applicationinsights": "^1.0.1",
+    "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "express": "^4.16.2",
+    "express-flash": "0.0.2",
+    "express-validator": "^4.3.0",
+    "mocha": "^4.0.1",
+    "mongoose": "4.11.14",
+    "passport": "^0.4.0",
+    "passport-azure-ad": "^3.0.8",
+    "swagger-ui-express": "^2.0.11"
+  }
+}

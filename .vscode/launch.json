@@ -1,0 +1,35 @@
+{
+  "configurations": [{
+      "name": "Launch Program",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/src/index.ts",
+      "outFiles": [
+        "${workspaceRoot}/dist/backend.js"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "Run mocha",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/mocha-webpack/bin/_mocha",
+      "stopOnEntry": false,
+      "sourceMaps": true,
+
+      "args": [
+        "--reporter",
+        "spec",
+        "--webpack-config",
+        "webpack.config.js",
+        "src/test/**/*.test.ts"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "env": {
+        "NODE_ENV": "testing"
+      }
+    }
+  ]
+}

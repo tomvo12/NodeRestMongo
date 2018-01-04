@@ -1,0 +1,267 @@
+swagger: "2.0"
+info:
+  description: "This is a sample Node REST API service provided by the DevCloud team."
+  version: "1.0.0"
+  title: "DevCloud Node REST API demo"
+  contact:
+    email: "azure@daimler.com"
+host: "devcloud-nodedemo.websites.azure.com"
+basePath: "/api"
+tags:
+- name: "user"
+  description: "Everything about users"
+  externalDocs:
+    description: "Find out more about swagger"
+    url: "http://swagger.io"
+schemes:
+- "https"
+paths:
+  /user/count:
+    get:
+      tags:
+      - "user"
+      summary: "Get the total user count"
+      operationId: "getUserCount"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+  /user:
+    get:
+      tags:
+      - "user"
+      description: ""
+      operationId: "getAllUsers"
+      parameters:
+      - name: "take"
+        in: "query"
+        description: "The maximum number of users to fetch for paging"
+        type: integer
+        minimum: 1
+      - name: "skip"
+        in: "query"
+        description: "The number of users to skip for paging"
+        type: integer
+        minimum: 0
+      - name: "sort"
+        in: "query"
+        description: "The property to sort on"
+        type: string
+        enum: ["UPN", "Email", "DisplayName", "LicenseType"]
+      - name: "sortOrder"
+        in: "query"
+        description: "The sort order"
+        type: string
+        enum: ["asc", "desc"]
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/userList"
+        400:
+          description: "Invalid input"
+      security:
+      - userstore_auth:
+        - "write:users"      
+    post:
+      tags:
+      - "user"
+      summary: "Add a new user to the store"
+      description: ""
+      operationId: "addUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: "Invalid input"
+      security:
+      - userstore_auth:
+        - "write:users"
+  /user/{upn}:
+    get:
+      tags:
+      - "user"
+      summary: "Find user by UPN"
+      description: "Returns a single user"
+      operationId: "getUserByUPN"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "upn"
+        in: "path"
+        description: "UPN of the user to return"
+        required: true
+        type: "string"
+        format: "email"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: "Invalid UPN supplied"
+        404:
+          description: "User not found"
+      security:
+      - userstore_auth:
+        - "write:users"
+    put:
+      tags:
+      - "user"
+      summary: "Add a new user to the store"
+      description: ""
+      operationId: "updateUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "upn"
+        in: "path"
+        description: "UPN of the user to return"
+        required: true
+        type: "string"
+        format: "email"
+      - in: "body"
+        name: "body"
+        description: "User object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/user"
+        400:
+          description: "Invalid input"
+      security:
+      - userstore_auth:
+        - "write:users"
+    delete:
+      tags:
+      - "user"
+      summary: "Deletes a user"
+      description: ""
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "upn"
+        in: "path"
+        description: "User upn to delete"
+        required: true
+        type: "string"
+        format: "email"
+      responses:
+        204:
+          description: "User deleted successfully"
+        400:
+          description: "Validation errors"
+        404:
+          description: "User not found"
+      security:
+      - userstore_auth:
+        - "write:users"
+securityDefinitions:
+  userstore_auth:
+    type: "oauth2"
+    authorizationUrl: "https://login.microsoftonline.com/corpdir.onmicrosoft.com/oauth2/authorize"
+    clientID: "clientID"
+    flow: "implicit"  
+    scopes:
+      write:users: "read and modify users"
+definitions:
+  user:
+    type: "object"
+    required:
+    - "UPN"
+    - "Email"
+    - "DisplayName"
+    - "LicenseType"
+    properties:
+      UPN:
+        type: "string"
+        format: "email"
+      Email:
+        type: "string"
+        format: "email"
+      DisplayName:
+        type: "string"
+        example: "full name"
+      LicenseType:
+        type: "string"
+        enum:
+        - "Basic"
+        - "Stakeholder"
+    xml:
+      name: "user"
+  userList:
+    type: "object"
+    required:
+    - "skip"
+    - "take"
+    - "totalCount"
+    - "users"
+    properties:
+      take:
+        type: integer
+      skip:
+        type: integer
+      totalCount:
+        type: integer
+      users:
+        type: array
+        items:
+          type: "object"
+          required:
+          - "UPN"
+          - "Email"
+          - "DisplayName"
+          - "LicenseType"
+          properties:
+            UPN:
+              type: "string"
+              format: "email"
+            Email:
+              type: "string"
+              format: "email"
+            DisplayName:
+              type: "string"
+              example: "full name"
+            LicenseType:
+              type: "string"
+              enum:
+              - "Basic"
+              - "Stakeholder"
+    xml:
+      name: "userList"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "object"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
